@@ -237,6 +237,9 @@ class DummyBatch:
         self.item_ctr += 1
         return 1.
 
+    def detach(self):
+        return self
+
     def __truediv__(self, other):
         return self
 

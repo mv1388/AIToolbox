@@ -175,7 +175,7 @@ class TrainLoop:
                     loss_batch = self.model.get_loss(batch_data, self.criterion, self.device)
                 else:
                     loss_batch = self.batch_model_feed_def.get_loss(self.model, batch_data, self.criterion, self.device)
-                self.loss_batch_accum.append(loss_batch.item())
+                self.loss_batch_accum.append(loss_batch.detach())
                 # Need to divide by the number of accumulation steps if our loss is averaged over the training samples
                 loss_batch = loss_batch / grad_accumulation
 
@@ -239,6 +239,9 @@ class TrainLoop:
         Returns:
             None
         """
+        # Move cached tensors potentially still on the GPU to the CPU
+        self.loss_batch_accum = [loss.item() for loss in self.loss_batch_accum]
+
         if type(self.optimizer) == MultiOptimizer:
             train_loss_batch_accum_avg = np.mean(self.loss_batch_accum, axis=0).tolist()
         else:
