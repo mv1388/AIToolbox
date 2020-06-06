@@ -264,6 +264,7 @@ class TrainLoop:
                         self.optimizer.zero_grad()
 
                 self.callbacks_handler.execute_batch_end()
+                del loss_batch
 
             # Automatic end of epoch code - reports the train and if available validation loss and executes callbacks
             self.auto_execute_end_of_epoch()
