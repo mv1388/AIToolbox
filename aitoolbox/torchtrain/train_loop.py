@@ -413,8 +413,9 @@ class TrainLoop:
                     loss_batch = self.batch_model_feed_def.get_loss_eval(self.model, batch_data, self.criterion,
                                                                          self.device)
 
-                loss_avg.append(loss_batch.item())
+                loss_avg.append(loss_batch.detach())
 
+            loss_avg = [loss.item() for loss in loss_avg]
             if self.ddp_training_mode:
                 loss_avg = self.ddp_handler.mp_sync(loss_avg).numpy()
 

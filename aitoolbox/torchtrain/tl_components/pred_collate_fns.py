@@ -36,13 +36,17 @@ def append_concat_predictions(y_batch, predictions):
 def torch_cat_transf(predictions):
     """PyTorch concatenation of the given list of tensors
 
+    The result is also moved back to the CPU. This enables you to keep the tensors on the GPU during the dataset
+    traversal and only move the final full dataset to the CPU once instead of loose time moving every batch
+    individually.
+
     Args:
         predictions (list): expects a list of torch.Tensor
 
     Returns:
-        torch.Tensor: concatenated tensor made up of provided smaller tensors
+        torch.Tensor: concatenated tensor made up of provided smaller tensors and moved to the CPU
     """
-    return torch.cat(predictions)
+    return torch.cat(predictions).cpu()
 
 
 def keep_list_transf(predictions):
